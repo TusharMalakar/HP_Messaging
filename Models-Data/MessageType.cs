@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HP_Messaging.Models
 {
+    [Table("MessageType", Schema = "dbo")]
     public class MessageType
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MessageTypeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

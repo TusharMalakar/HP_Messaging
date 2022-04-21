@@ -1,4 +1,6 @@
-﻿using HP_Messaging.Models;
+﻿using HP_Messaging.Data;
+using HP_Messaging.Models;
+using HP_Messaging.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,16 +13,16 @@ namespace HP_Messaging.Controllers
     [Route("auth")]
     public class AuthController : ControllerBase
     {
-        private AppSettings appSetting;
-        public AuthController()
+        private AuthService authService;
+
+        public AuthController(ChatContext _dbContext)
         {
-            appSetting = new AppSettings();
+            authService = new AuthService(_dbContext);
         }
         [HttpGet]
-        public ChatUser SignIn([FromQuery] int email, [FromQuery] int password)
+        public ChatUser SignIn([FromQuery] string email, [FromQuery] string password)
         {
-
-            var temp = appSetting.SqlConnection;
+            var temp = authService.SignIn("","");
             return new ChatUser();
         }
 

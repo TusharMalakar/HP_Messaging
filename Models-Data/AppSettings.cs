@@ -8,9 +8,9 @@ namespace HP_Messaging.Models
     public class AppSettings
     {
         public string SqlConnection { get; set; }
-        public AppSettings()
-        {
-            SqlConnection = "Server = localhost; Database = MessagingDB; Trusted_Connection = True;";
-        }
+        //public AppSettings()
+        //{
+        //    SqlConnection = "Server = localhost; Database = MessagingDB; Trusted_Connection = True;";
+        //}
     }
 }

@@ -1,3 +1,5 @@
+using HP_Messaging.Data;
+using HP_Messaging.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -5,27 +7,43 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using HP_Messaging.Services;
 
 namespace HP_Messaging
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment _env;
+        private string sqlConnection;
 
-        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration config, IWebHostEnvironment env)
+        {
+            configuration = config;
+            _env = env;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
+            configuration = builder.Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
+            sqlConnection = appSettings.SqlConnection;
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddDbContext<ChatContext>(options => options.UseSqlServer(sqlConnection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
