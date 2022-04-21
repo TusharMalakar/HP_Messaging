@@ -22,8 +22,7 @@ namespace HP_Messaging.Controllers
         [HttpGet]
         public ChatUser SignIn([FromQuery] string email, [FromQuery] string password)
         {
-            var temp = authService.SignIn("","");
-            return new ChatUser();
+            return authService.SignIn(email, password);
         }
 
     }

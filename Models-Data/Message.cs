@@ -14,5 +14,6 @@ namespace HP_Messaging.Models
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public virtual MessageType MessageType { get; set; }
+        public virtual ChatUser author { get; set; }
     }
 }
