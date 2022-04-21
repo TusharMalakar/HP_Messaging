@@ -12,7 +12,6 @@ namespace HP_Messaging.Migrations
 
             migrationBuilder.CreateTable(
                 name: "ChatUser",
-                schema: "dbo",
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false)
@@ -21,7 +20,8 @@ namespace HP_Messaging.Migrations
                     LastName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
-                    DateCreated = table.Column<DateTime>(nullable: false)
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    AuthHash = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,7 +46,6 @@ namespace HP_Messaging.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Message",
-                schema: "dbo",
                 columns: table => new
                 {
                     MessageId = table.Column<int>(nullable: false)
@@ -54,7 +53,8 @@ namespace HP_Messaging.Migrations
                     Body = table.Column<string>(nullable: true),
                     MessageTypeId = table.Column<int>(nullable: false),
                     CreatedBy = table.Column<int>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false)
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    authorUserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -66,28 +66,36 @@ namespace HP_Messaging.Migrations
                         principalTable: "MessageType",
                         principalColumn: "MessageTypeId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Message_ChatUser_authorUserId",
+                        column: x => x.authorUserId,
+                        principalTable: "ChatUser",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Message_MessageTypeId",
-                schema: "dbo",
                 table: "Message",
                 column: "MessageTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Message_authorUserId",
+                table: "Message",
+                column: "authorUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ChatUser",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
-                name: "Message",
-                schema: "dbo");
+                name: "Message");
 
             migrationBuilder.DropTable(
                 name: "MessageType",
                 schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "ChatUser");
         }
     }
 }

@@ -2,9 +2,6 @@
 using HP_Messaging.Models;
 using HP_Messaging.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HP_Messaging.Controllers
@@ -20,9 +17,9 @@ namespace HP_Messaging.Controllers
             authService = new AuthService(_dbContext);
         }
         [HttpGet]
-        public ChatUser SignIn([FromQuery] string email, [FromQuery] string password)
+        public async Task<ChatUser> SignIn([FromQuery] string email, [FromQuery] string password)
         {
-            return authService.SignIn(email, password);
+            return await Task.FromResult(authService.SignIn(email, password));
         }
 
     }

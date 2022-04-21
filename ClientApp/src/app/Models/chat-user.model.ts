@@ -7,4 +7,5 @@ export class ChatUserModel{
     email :string;
     password:string;
     dateTime : Date;
+    authHash:string;
 }

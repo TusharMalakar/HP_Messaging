@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
-import { MessageModel } from "../Models/message.model";
+import { MessageModel } from "../models/message.model";
 
 @Injectable({
   providedIn: 'root'

@@ -5,16 +5,16 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { SignInUpComponent } from './sign-in-up/sign-in-up.component';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { HomeComponent } from './components/home/home.component';
+import { SignInComponent } from './components/sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    SignInUpComponent
+    SignInComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -22,7 +22,7 @@ import { SignInUpComponent } from './sign-in-up/sign-in-up.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'signInUp', component: SignInUpComponent }
+      { path: 'signIn', component: SignInComponent }
     ])
   ],
   providers: [],

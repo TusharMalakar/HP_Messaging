@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HP_Messaging.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20220421185951_Init")]
+    [Migration("20220421220505_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,9 @@ namespace HP_Messaging.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthHash")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -45,7 +48,7 @@ namespace HP_Messaging.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("ChatUser","dbo");
+                    b.ToTable("ChatUser");
                 });
 
             modelBuilder.Entity("HP_Messaging.Models.Message", b =>
@@ -67,11 +70,16 @@ namespace HP_Messaging.Migrations
                     b.Property<int>("MessageTypeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("authorUserId")
+                        .HasColumnType("int");
+
                     b.HasKey("MessageId");
 
                     b.HasIndex("MessageTypeId");
 
-                    b.ToTable("Message","dbo");
+                    b.HasIndex("authorUserId");
+
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("HP_Messaging.Models.MessageType", b =>
@@ -102,6 +110,10 @@ namespace HP_Messaging.Migrations
                         .HasForeignKey("MessageTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("HP_Messaging.Models.ChatUser", "author")
+                        .WithMany()
+                        .HasForeignKey("authorUserId");
                 });
 #pragma warning restore 612, 618
         }

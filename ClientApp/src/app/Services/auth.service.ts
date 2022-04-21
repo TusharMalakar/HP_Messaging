@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
-import { ChatUserModel } from "../Models/chat-user.model";
+import { ChatUserModel } from "../models/chat-user.model";
 
 @Injectable({
   providedIn: 'root'
