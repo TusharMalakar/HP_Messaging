@@ -2,7 +2,7 @@
 
 namespace HP_Messaging.Models
 {
-    public class ChatUserModel
+    public class UserModel
     {
         public int UserId { get; set; }
         public string FirstName { get; set; }

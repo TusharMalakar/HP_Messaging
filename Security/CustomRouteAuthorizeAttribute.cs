@@ -55,7 +55,7 @@ namespace HP_Messaging.Security
             {
                 var authToken = authHeader.Substring("Bearer ".Length);
                 var email = HashHelper.DecryptHash(authToken);
-                if(string.IsNullOrEmpty(email) || !_dbContext.ChatUsers.Any(user => user.Email == email))
+                if(string.IsNullOrEmpty(email) || !_dbContext.Users.Any(user => user.Email == email))
                 {
                     context.Result = new ForbidResult();
                 }

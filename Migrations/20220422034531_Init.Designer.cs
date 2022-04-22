@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HP_Messaging.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20220421220505_Init")]
+    [Migration("20220422034531_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,15 +21,63 @@ namespace HP_Messaging.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("HP_Messaging.Models.ChatUser", b =>
+            modelBuilder.Entity("HP_Messaging.Entities.Message", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Message");
+                });
+
+            modelBuilder.Entity("HP_Messaging.Entities.MessageReply", b =>
+                {
+                    b.Property<int>("MessageReplyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MessageReplyId");
+
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MessageReply");
+                });
+
+            modelBuilder.Entity("HP_Messaging.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AuthHash")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -48,72 +96,29 @@ namespace HP_Messaging.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("ChatUser");
+                    b.ToTable("User");
                 });
 
-            modelBuilder.Entity("HP_Messaging.Models.Message", b =>
+            modelBuilder.Entity("HP_Messaging.Entities.Message", b =>
                 {
-                    b.Property<int>("MessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Body")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MessageTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("authorUserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MessageId");
-
-                    b.HasIndex("MessageTypeId");
-
-                    b.HasIndex("authorUserId");
-
-                    b.ToTable("Message");
-                });
-
-            modelBuilder.Entity("HP_Messaging.Models.MessageType", b =>
-                {
-                    b.Property<int>("MessageTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("MessageTypeId");
-
-                    b.ToTable("MessageType","dbo");
-                });
-
-            modelBuilder.Entity("HP_Messaging.Models.Message", b =>
-                {
-                    b.HasOne("HP_Messaging.Models.MessageType", "MessageType")
+                    b.HasOne("HP_Messaging.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("MessageTypeId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.HasOne("HP_Messaging.Models.ChatUser", "author")
+            modelBuilder.Entity("HP_Messaging.Entities.MessageReply", b =>
+                {
+                    b.HasOne("HP_Messaging.Entities.Message", null)
+                        .WithMany("MessageReplys")
+                        .HasForeignKey("MessageId");
+
+                    b.HasOne("HP_Messaging.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("authorUserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

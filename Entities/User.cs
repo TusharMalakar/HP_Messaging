@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HP_Messaging.Entities
 {
-    [Table("ChatUser")]
-    public class ChatUser
+    [Table("User")]
+    public class User
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }

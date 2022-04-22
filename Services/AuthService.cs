@@ -20,22 +20,22 @@ namespace HP_Messaging.Services
             mapper = _mapper;
         }
 
-        public async Task<ChatUserModel> SignIn(string email, string password)
+        public async Task<UserModel> SignIn(string email, string password)
         {
-            ChatUserModel authUser =null;
+            UserModel authUser =null;
             var hash = !string.IsNullOrEmpty(email) ? HashHelper.GetHash(email) : string.Empty;
-            var user = dbContext.ChatUsers.FirstOrDefault(user => user.Email==email);
+            var user = dbContext.Users.FirstOrDefault(user => user.Email==email);
             if (user != null)
             {
-                authUser = mapper.Map<ChatUserModel>(user);
+                authUser = mapper.Map<UserModel>(user);
                 authUser.AuthHash = hash;
                 return authUser;
             }
             
-            var newChatUser = new ChatUser() { Email = email, Password = password, DateCreated = DateTime.Now };
-            dbContext.ChatUsers.Add(newChatUser);
+            var newChatUser = new User() { Email = email, Password = password, DateCreated = DateTime.Now };
+            dbContext.Users.Add(newChatUser);
             await dbContext.SaveChangesAsync();
-            authUser = mapper.Map<ChatUserModel>(user);
+            authUser = mapper.Map<UserModel>(user);
             authUser.AuthHash = hash;
             return authUser;
         }

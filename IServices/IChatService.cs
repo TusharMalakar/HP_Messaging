@@ -6,7 +6,8 @@ namespace HP_Messaging.IServices
 {
     public interface IChatService
     {
-        Task<List<MessageModel>> GetMessages();
+        List<MessageModel> GetMessages();
         Task<MessageModel> SendMessage(MessageModel message);
+        Task<MessageReplyModel> ReplyMessage(MessageReplyModel reply);
     }
 }

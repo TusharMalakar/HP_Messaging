@@ -21,7 +21,7 @@ namespace HP_Messaging.Controllers
             authService = new AuthService(_dbContext, _mapper);
         }
         [HttpGet]
-        public async Task<ChatUserModel> SignIn([FromQuery] string email, [FromQuery] string password)
+        public async Task<UserModel> SignIn([FromQuery] string email, [FromQuery] string password)
         {
             return await authService.SignIn(email, password);
         }

@@ -14,9 +14,9 @@ namespace HP_Messaging.Services
 
         protected AutoMapperProfile(string profileName) : base(profileName)
         {
-            CreateMap<ChatUser, ChatUserModel>().ReverseMap();
+            CreateMap<User, UserModel>().ReverseMap();
             CreateMap<Message, MessageModel>().ReverseMap();
-            CreateMap<MessageType, MessageTypeModel>().ReverseMap();
+            CreateMap<MessageReply, MessageReplyModel>().ReverseMap();
         }
         
     }
