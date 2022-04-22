@@ -1,20 +1,19 @@
-﻿using HP_Messaging.IServices;
+﻿using System;
 using HP_Messaging.Models;
-using System;
+using HP_Messaging.IServices;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HP_Messaging.Services
 {
-    public class ChatService : IChatServicecs
+    public class ChatService : IChatService
     {
-        public List<Message> GetMessages()
+        public Task<List<MessageModel>> GetMessages()
         {
             throw new NotImplementedException();
         }
 
-        public Message SendMessage(Message message)
+        public Task<MessageModel> SendMessage(MessageModel message)
         {
             throw new NotImplementedException();
         }

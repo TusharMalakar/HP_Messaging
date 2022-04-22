@@ -1,4 +1,3 @@
-using HP_Messaging.Data;
 using HP_Messaging.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using HP_Messaging.Services;
+using HP_Messaging.Entities;
 
 namespace HP_Messaging
 {
@@ -43,7 +43,16 @@ namespace HP_Messaging
                 configuration.RootPath = "ClientApp/dist";
             });
 
+            // DbContext
             services.AddDbContext<ChatContext>(options => options.UseSqlServer(sqlConnection));
+
+            //Mapper
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfile());
+            });
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

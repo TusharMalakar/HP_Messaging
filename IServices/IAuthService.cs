@@ -1,9 +1,10 @@
-﻿using HP_Messaging.Models_Data;
+﻿using HP_Messaging.Models;
+using System.Threading.Tasks;
 
 namespace HP_Messaging.IServices
 {
     public interface IAuthService
     {
-        AuthResponse SignIn(string email, string password);
+        Task<ChatUserModel> SignIn(string email, string password);
     }
 }

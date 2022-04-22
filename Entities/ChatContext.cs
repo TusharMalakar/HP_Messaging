@@ -1,7 +1,6 @@
-﻿using HP_Messaging.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace HP_Messaging.Data
+namespace HP_Messaging.Entities
 {
     public class ChatContext : DbContext
     {

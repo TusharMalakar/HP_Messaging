@@ -1,10 +1,6 @@
 ﻿using HP_Messaging.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HP_Messaging.Controllers
 {
@@ -14,7 +10,7 @@ namespace HP_Messaging.Controllers
     {
 
         [HttpGet]
-        public object SendMsg([FromBody] Message message)
+        public object SendMsg([FromBody] MessageModel message)
         {
             return "welcome";
         }

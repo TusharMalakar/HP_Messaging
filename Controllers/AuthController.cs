@@ -1,8 +1,10 @@
-﻿using HP_Messaging.Data;
+﻿using AutoMapper;
 using HP_Messaging.Models;
 using HP_Messaging.Services;
-using Microsoft.AspNetCore.Mvc;
+using HP_Messaging.Entities;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace HP_Messaging.Controllers
 {
@@ -12,14 +14,14 @@ namespace HP_Messaging.Controllers
     {
         private AuthService authService;
 
-        public AuthController(ChatContext _dbContext)
+        public AuthController(ChatContext _dbContext, IMapper _mapper)
         {
-            authService = new AuthService(_dbContext);
+            authService = new AuthService(_dbContext, _mapper);
         }
         [HttpGet]
-        public async Task<ChatUser> SignIn([FromQuery] string email, [FromQuery] string password)
+        public async Task<ChatUserModel> SignIn([FromQuery] string email, [FromQuery] string password)
         {
-            return await Task.FromResult(authService.SignIn(email, password));
+            return await authService.SignIn(email, password);
         }
 
     }
