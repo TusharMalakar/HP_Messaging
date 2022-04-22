@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using HP_Messaging.Services;
 using HP_Messaging.Entities;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Http;
 
 namespace HP_Messaging
 {
@@ -53,6 +55,10 @@ namespace HP_Messaging
             });
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,6 +103,9 @@ namespace HP_Messaging
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+            app.UseAuthentication();
+
+            app.UseAuthorization();
         }
     }
 }

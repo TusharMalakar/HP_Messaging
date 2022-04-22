@@ -6,38 +6,28 @@ namespace HP_Messaging.Security
 {
     public class HashHelper
     {
-        public static string GetHash(string email)
+        public static string GetHash(string strEncrypted)
         {
-            SHA256 sha256Hash = SHA256.Create();
-            // Convert the input string to a byte array and compute the hash.
-            byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(email));
+            byte[] b = System.Text.ASCIIEncoding.ASCII.GetBytes(strEncrypted);
+            string encrypted = Convert.ToBase64String(b);
+            return encrypted;
+        }
 
-            // Create a new Stringbuilder to collect the bytes
-            // and create a string.
-            var sBuilder = new StringBuilder();
-
-            // Loop through each byte of the hashed data
-            // and format each one as a hexadecimal string.
-            for (int i = 0; i < data.Length; i++)
+        public static string DecryptHash(string encrString)
+        {
+            byte[] b;
+            string decrypted;
+            try
             {
-                sBuilder.Append(data[i].ToString("x2"));
+                b = Convert.FromBase64String(encrString);
+                decrypted = System.Text.ASCIIEncoding.ASCII.GetString(b);
             }
-
-            // Return the hexadecimal string.
-            return sBuilder.ToString();
+            catch (FormatException fe)
+            {
+                decrypted = "";
+            }
+            return decrypted;
         }
-
-        public static bool VerifyHash(string input, string hash)
-        {
-            SHA256 sha256Hash = SHA256.Create();
-            // Hash the input.
-            var hashOfInput = GetHash(input);
-
-            // Create a StringComparer an compare the hashes.
-            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-
-            return comparer.Compare(hashOfInput, hash) == 0;
-        }
-
+        
     }
 }
