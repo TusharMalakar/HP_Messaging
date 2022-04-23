@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using HP_Messaging.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 
 namespace HP_Messaging.Services
 {
@@ -14,11 +15,13 @@ namespace HP_Messaging.Services
     {
         private ChatContext dbContext;
         private readonly IMapper mapper;
+        private readonly IHubContext<BroadcastHub, IHubClient> hubContext;
 
-        public ChatService(ChatContext _dbContext, IMapper _mapper)
+        public ChatService(ChatContext _dbContext, IMapper _mapper, IHubContext<BroadcastHub, IHubClient> _hubContext)
         {
             dbContext = _dbContext;
             mapper = _mapper;
+            hubContext = _hubContext;
         }
 
         public async Task<MessageModel> SendMessage(MessageModel message)
@@ -32,6 +35,7 @@ namespace HP_Messaging.Services
                 dbContext.Messages.Update(messageEntity);
 
             await dbContext.SaveChangesAsync();
+            await hubContext.Clients.All.BroadcastMessage("Message", messageEntity);
             return mapper.Map<MessageModel>(messageEntity);
         }
 
@@ -47,6 +51,7 @@ namespace HP_Messaging.Services
 
             dbContext.MessageReplies.Add(messageReplyEntity);
             await dbContext.SaveChangesAsync();
+            await hubContext.Clients.All.BroadcastMessage("MessageReply", messageReplyEntity);
             return mapper.Map<MessageReplyModel>(messageReplyEntity);
         }
 

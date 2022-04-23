@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace HP_Messaging.Services
 {
-    public class NotificationService : Hub<ITypedHubClient>
+    public class BroadcastHub : Hub<IHubClient>
     {
     }
 
-    public interface ITypedHubClient
+    public interface IHubClient
     {
-        Task BroadcastMessage(string type, string payload);
+        Task BroadcastMessage(string type, object payload);
     }
 }

@@ -6,7 +6,7 @@ using HP_Messaging.Services;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-
+using Microsoft.AspNetCore.SignalR;
 
 namespace HP_Messaging.Controllers
 {
@@ -16,9 +16,9 @@ namespace HP_Messaging.Controllers
     public class MessaginController : ControllerBase
     {
         private ChatService chatService;
-        public MessaginController(ChatContext _dbContext, IMapper _mapper)
+        public MessaginController(ChatContext _dbContext, IMapper _mapper, IHubContext<BroadcastHub, IHubClient> _hubContext)
         {
-            chatService = new ChatService(_dbContext, _mapper);
+            chatService = new ChatService(_dbContext, _mapper, _hubContext);
         }
 
         [HttpGet]

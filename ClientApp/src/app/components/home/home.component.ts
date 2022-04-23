@@ -1,10 +1,10 @@
 
-import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ChatService } from 'src/app/services/chat.service';
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, Inject, OnInit } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { ActiceStatusTypeEnum } from 'src/app/models/common.enum';
+import * as signalR from '@microsoft/signalr';
 
 
 @Component({
@@ -13,31 +13,36 @@ import { ActiceStatusTypeEnum } from 'src/app/models/common.enum';
 })
 export class HomeComponent implements OnInit {
 
+  private baseUrl: string;
   private chatServie: ChatService;
-  private _hubConnection: HubConnection;
 
-  constructor() { }
+  constructor(@Inject('BASE_URL') _baseUrl: string) {
+    this.baseUrl=_baseUrl;
+  }
 
   ngOnInit(): void {
-    // this.connect();
-  }
-
-  public onSendButtonClick(): void {
-    this._hubConnection.send('SendMessage', 'test message').then(r => { });
-  }
-
-  private connect(): void {
-    this._hubConnection = new HubConnectionBuilder()
-      .withUrl('http://localhost:52864/chathub')
+    const connection = new signalR.HubConnectionBuilder()
+      .configureLogging(signalR.LogLevel.Information)
+      .withUrl(this.baseUrl+'chathub')
       .build();
 
-    this._hubConnection.on('MessageReceived', (message) => {
-      console.log(message);
+    connection.start().then(function () {
+      console.log('SignalR Connected!');
+    }).catch(function (err) {
+      return console.error(err.toString());
     });
 
-    this._hubConnection.start()
-      .then(() => console.log('connection started'))
-      .catch((err) => console.log('error while establishing signalr connection: ' + err));
+    connection.on("BroadcastMessage", (type, object) => {
+      console.log("message broadcast received", type, object);
+    });
+  }
+
+  SendMessage() {
+
+  }
+
+  SendReply(){
+
   }
 
   GetMessages(){

@@ -59,6 +59,17 @@ namespace HP_Messaging
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+
+            //SignalR
+            services.AddCors(o => o.AddPolicy("CorsPolicy", builder => {
+                builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .WithOrigins("http://localhost:44364"); // ssl: localhost:44364 applicationUrl: localhost:57803
+            }));
+            services.AddSignalR();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,7 +116,13 @@ namespace HP_Messaging
             });
             app.UseAuthentication();
 
-            app.UseAuthorization();
+            app.UseCors("CorsPolicy");
+
+            //SingalR endpoint
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<BroadcastHub>("/chathub");
+            });
         }
     }
 }
