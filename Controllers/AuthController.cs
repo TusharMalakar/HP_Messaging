@@ -18,10 +18,10 @@ namespace HP_Messaging.Controllers
         {
             authService = new AuthService(_dbContext, _mapper);
         }
-        [HttpGet]
-        public async Task<UserModel> SignIn([FromQuery] string email, [FromQuery] string password)
+        [HttpPost]
+        public async Task<UserModel> SignIn([FromBody] UserModel userModel)
         {
-            return await authService.SignIn(email, password);
+            return await authService.SignIn(userModel);
         }
 
     }

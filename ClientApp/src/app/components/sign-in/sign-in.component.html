@@ -1,0 +1,37 @@
+
+
+
+<div class="container shadow p-3 mb-5 bg-white rounded">
+  <form [formGroup]="profileForm" (ngSubmit)="SignIn()">
+    <div class="form-group">
+      <label for="First Name">First Name</label>
+      <input type="text" class="form-control" style="width: 50%;"  placeholder="Enter First Name" formControlName="firstName">
+    </div>
+    <div class="form-group">
+      <label for="Last Name">Last Name</label>
+      <input type="text" class="form-control" style="width: 50%;"  placeholder="Enter Last Name" formControlName="lastName">
+    </div>
+
+    <div class="form-group">
+      <label for="exampleInputEmail1">Email address <span *ngIf="!profileForm.get('email').valid" style="color: red;"> *</span></label>
+      <input type="email" class="form-control" style="width: 50%;" aria-describedby="emailHelp" placeholder="Enter email" formControlName="email">
+
+      <span *ngIf="profileForm.get('email').dirty && profileForm.get('email').errors">
+        <small class="text-warning">Valid Email is required</small>
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1">Password <span *ngIf="!profileForm.get('password').valid" style="color: red;"> *</span></label>
+      <input type="password" class="form-control" style="width: 50%;" placeholder="Password" formControlName="password">
+      <span *ngIf="profileForm.get('password').dirty && profileForm.get('password').errors">
+        <small class="text-warning">Password is required</small>
+      </span>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!profileForm.valid">Submit</button>
+  </form>
+</div>
+
+
+
+

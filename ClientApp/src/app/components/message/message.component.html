@@ -1,0 +1,30 @@
+
+
+
+
+<div class="container shadow p-3 mb-5 bg-white rounded">
+  <h1 >display messages here</h1>
+  <div class="container">
+      <table class="table table-striped table-bordered">
+          <thead>
+              <tr>
+                  <th>Boy</th>
+                  <th>Author</th>
+                  <th>Date</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let message of messageList">
+                  <td>{{message.body}}</td>
+                  <td>{{message.user.email}}</td>
+                  <td>{{message.createdDate}}</td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+
+  <br>
+  <input id="message" [(ngModel)]="message"/>
+  <button (click)="SendMessage()">Send message</button>
+</div>
+

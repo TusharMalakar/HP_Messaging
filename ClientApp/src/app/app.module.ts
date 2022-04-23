@@ -6,27 +6,30 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
-import { HomeComponent } from './components/home/home.component';
+import { MessageComponent } from './components/message/message.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { AuthGuardService as AuthGuard} from './services/auth-gard.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ChatService } from './services/chat.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
+    MessageComponent,
     SignInComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
       {
         path: '',
-        component: HomeComponent,
+        component: MessageComponent,
         pathMatch: 'full'
-        // ,canActivate:[AuthGuard]
+        ,canActivate:[AuthGuard]
       },
       {
         path: 'signIn',
@@ -37,7 +40,7 @@ import { AuthGuardService as AuthGuard} from './services/auth-gard.service';
     ])
   ],
   exports: [RouterModule],
-  providers: [AuthGuard],
+  providers: [AuthGuard, ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

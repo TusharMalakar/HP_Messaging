@@ -66,7 +66,7 @@ namespace HP_Messaging
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
-                .WithOrigins("http://localhost:44364"); // ssl: localhost:44364 applicationUrl: localhost:57803
+                .WithOrigins("http://localhost:44364");
             }));
             services.AddSignalR();
 

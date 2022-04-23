@@ -5,6 +5,6 @@ namespace HP_Messaging.IServices
 {
     public interface IAuthService
     {
-        Task<UserModel> SignIn(string email, string password);
+        Task<UserModel> SignIn(UserModel userModel);
     }
 }

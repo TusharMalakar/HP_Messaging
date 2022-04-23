@@ -4,7 +4,8 @@ export class MessageReplyModel{
   messageReplyId:number;
   messageId:number;
   body:string;
-  createdDate :string;
-  User:ChatUserModel;
   activeStatusId:number;
+  createdDate :string;
+  updatedDate :string;
+  User:ChatUserModel;
 }

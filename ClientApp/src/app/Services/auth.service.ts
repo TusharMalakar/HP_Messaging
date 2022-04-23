@@ -11,13 +11,13 @@ export class AuthService{
   private http : HttpClient;
   private baseUrl : string;
 
-  public AuthService(_http: HttpClient, @Inject('BASE_URL') _baseUrl: string){
+  constructor(_http: HttpClient, @Inject('BASE_URL') _baseUrl: string){
     this.http=_http;
     this.baseUrl = _baseUrl
   }
 
-  SignIn(email:string, password:string){
-    return this.http.get<ChatUserModel>(this.baseUrl + 'signIn?email='+email+'&password='+password);
+  SignIn(profile: ChatUserModel){
+    return this.http.post<ChatUserModel>(this.baseUrl + 'auth',profile);
   }
 
 }

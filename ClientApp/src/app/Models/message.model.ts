@@ -4,9 +4,9 @@ import { MessageReplyModel } from "./mesage-reply.model";
 export class MessageModel{
   messageId:number;
   body:string;
+  activeStatusId:number;
   createdDate :string;
+  updatedDate: string;
   user:ChatUserModel;
   messageReplys:MessageReplyModel[];
-  author:ChatUserModel;
-  activeStatusId:number;
 }
