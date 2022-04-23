@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
+import { AuthGuardService as AuthGuard} from './services/auth-gard.service';
 
 @NgModule({
   declarations: [
@@ -21,11 +22,22 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'signIn', component: SignInComponent }
+      {
+        path: '',
+        component: HomeComponent,
+        pathMatch: 'full'
+        ,canActivate:[AuthGuard]
+      },
+      {
+        path: 'signIn',
+        component: SignInComponent
+      }
+
+      ,{ path: '**', redirectTo: 'signIn' }
     ])
   ],
-  providers: [],
+  exports: [RouterModule],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

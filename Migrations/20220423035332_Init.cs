@@ -31,8 +31,10 @@ namespace HP_Messaging.Migrations
                     MessageId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Body = table.Column<string>(nullable: true),
+                    ActiceStatusId = table.Column<int>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UpdatedDate = table.Column<DateTime>(nullable: true),
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,7 +44,7 @@ namespace HP_Messaging.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,9 +54,11 @@ namespace HP_Messaging.Migrations
                     MessageReplyId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Body = table.Column<string>(nullable: true),
+                    MessageId = table.Column<int>(nullable: false),
+                    ActiceStatusId = table.Column<int>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
-                    MessageId = table.Column<int>(nullable: true)
+                    UpdatedDate = table.Column<DateTime>(nullable: true),
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -64,13 +68,13 @@ namespace HP_Messaging.Migrations
                         column: x => x.MessageId,
                         principalTable: "Message",
                         principalColumn: "MessageId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MessageReply_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

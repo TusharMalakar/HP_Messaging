@@ -54,11 +54,21 @@ namespace HP_Messaging.Security
             if (authHeader.StartsWith("Bearer "))
             {
                 var authToken = authHeader.Substring("Bearer ".Length);
-                var email = HashHelper.DecryptHash(authToken);
-                if(string.IsNullOrEmpty(email) || !_dbContext.Users.Any(user => user.Email == email))
+                if (authToken == null)
                 {
                     context.Result = new ForbidResult();
                 }
+                var email = HashHelper.DecryptHash(authToken);
+                if (email == null)
+                {
+                    context.Result = new ForbidResult();
+                }
+                var user = _dbContext.Users.FirstOrDefault(user => user.Email == email);
+                if (user==null)
+                {
+                    context.Result = new ForbidResult();
+                }
+                _dbContext.profile = user;
             }
           }
 

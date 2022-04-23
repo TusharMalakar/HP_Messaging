@@ -35,7 +35,7 @@ namespace HP_Messaging.Services
             var newChatUser = new User() { Email = email, Password = password, DateCreated = DateTime.Now };
             dbContext.Users.Add(newChatUser);
             await dbContext.SaveChangesAsync();
-            authUser = mapper.Map<UserModel>(user);
+            authUser = mapper.Map<UserModel>(newChatUser);
             authUser.AuthHash = hash;
             return authUser;
         }

@@ -24,17 +24,30 @@ namespace HP_Messaging.Services
         public async Task<MessageModel> SendMessage(MessageModel message)
         {
             var messageEntity = mapper.Map<Message>(message);
-            dbContext.Messages.Add(messageEntity);
+            messageEntity.User = dbContext.profile;
+
+            if(messageEntity.MessageId == 0)
+                dbContext.Messages.Add(messageEntity);
+            else
+                dbContext.Messages.Update(messageEntity);
+
             await dbContext.SaveChangesAsync();
             return mapper.Map<MessageModel>(messageEntity);
         }
 
         public async Task<MessageReplyModel> ReplyMessage(MessageReplyModel reply)
         {
-            var messageEntity = mapper.Map<MessageReply>(reply);
-            dbContext.MessageReplies.Add(messageEntity);
+            var messageReplyEntity = mapper.Map<MessageReply>(reply);
+            messageReplyEntity.User = dbContext.profile;
+
+            if (messageReplyEntity.MessageReplyId == 0)
+                dbContext.MessageReplies.Add(messageReplyEntity);
+            else
+                dbContext.MessageReplies.Update(messageReplyEntity);
+
+            dbContext.MessageReplies.Add(messageReplyEntity);
             await dbContext.SaveChangesAsync();
-            return mapper.Map<MessageReplyModel>(messageEntity);
+            return mapper.Map<MessageReplyModel>(messageReplyEntity);
         }
 
         public List<MessageModel> GetMessages()

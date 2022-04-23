@@ -10,10 +10,9 @@ namespace HP_Messaging.Models
         [Required]
         public string Body { get; set; }
         [Required]
-        public int MessageTypeId { get; set; }
-        [Required]
-        public int UserId { get; set; }
+        public int ActiveStatusId { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public virtual UserModel User { get; set; }
         public virtual List<MessageReplyModel> MessageReplys { get; set; }
     }

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace HP_Messaging.Controllers
 {
-    //[CustomRouteAuthorize]
+    [CustomRouteAuthorize]
     [ApiController]
     [Route("chat")]
     public class MessaginController : ControllerBase

@@ -1,12 +1,12 @@
 import { ChatUserModel } from "./chat-user.model";
-import { MessageTypeModel } from "./mesage-type.model";
+import { MessageReplyModel } from "./mesage-reply.model";
 
 export class MessageModel{
   messageId:number;
   body:string;
-  messageTypeId:number;
-  createdBy:number;
   createdDate :string;
-  messageType:MessageTypeModel;
+  user:ChatUserModel;
+  messageReplys:MessageReplyModel[];
   author:ChatUserModel;
+  activeStatusId:number;
 }

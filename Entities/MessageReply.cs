@@ -9,11 +9,11 @@ namespace HP_Messaging.Entities
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MessageReplyId { get; set; }
-        public int MessageId { get; set; }
         public string Body { get; set; }
+        public int MessageId { get; set; }
+        public int ActiceStatusId { get; set; }
         public DateTime CreatedDate { get; set; }
-        [ForeignKey("UserId")]
-        public int UserId { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public virtual User User { get; set; }
     }
 }
