@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using HP_Messaging.Models;
 using HP_Messaging.Services;
-using HP_Messaging.Security;
 using HP_Messaging.Entities;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HP_Messaging.Controllers
 {
-    [CustomRouteAuthorize]
     [ApiController]
     [Route("auth")]
     public class AuthController : ControllerBase
