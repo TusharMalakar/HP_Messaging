@@ -1,7 +1,7 @@
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { ChatService } from 'src/app/services/chat.service';
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { ActiceStatusTypeEnum } from 'src/app/models/common.enum';
 import * as signalR from '@microsoft/signalr';
@@ -9,20 +9,26 @@ import { MessageModel } from 'src/app/models/message.model';
 
 
 @Component({
-  selector: 'app-home',
+  selector: 'message-home',
   templateUrl: './message.component.html',
 })
-export class MessageComponent implements OnInit {
+export class MessageComponent implements OnInit, OnChanges, AfterViewInit{
 
   message: string;
-  private baseUrl: string;
-  private chatServie: ChatService;
-  private messageList: MessageModel[];
+  baseUrl: string;
+  chatServie: ChatService;
+  messageList: MessageModel[];
 
 
   constructor(@Inject('BASE_URL') _baseUrl: string, private _chatService: ChatService, private cdRef :ChangeDetectorRef) {
     this.baseUrl=_baseUrl;
     this.chatServie = _chatService;
+  }
+  ngOnChanges() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+  ngAfterViewInit(){
+    window.scrollTo(0, document.body.scrollHeight);
   }
 
   ngOnInit(): void {
@@ -44,13 +50,18 @@ export class MessageComponent implements OnInit {
           if(!this.messageList.map(msg => msg.messageId).includes(object.messageId)){
             this.messageList.push(object);
             this.cdRef.detectChanges();
+            window.scrollTo(0, document.body.scrollHeight);
           }
           break;
         case 'MessageReply':
-          // if(!this.messageReplyList.map(msg => msg.messageReplyId).includes(object.messageReplyId)){
-          //   this.messageReplyList.push(object);
-          //   this.cdRef.detectChanges();
-          // }
+          if(this.messageList.map(msg => msg.messageId).includes(object.messageId)){
+            var msgRef = this.messageList.find(msg => msg.messageId=object.messageId);
+            msgRef.messageReplys.push(object);
+            this.messageList = this.messageList.filter(msg => msg.messageId != msgRef.messageId);
+            this.messageList.push(msgRef);
+            this.cdRef.detectChanges();
+            window.scrollTo(0, document.body.scrollHeight);
+          }
           break;
       }
     });
@@ -58,19 +69,12 @@ export class MessageComponent implements OnInit {
   }
 
   SendMessage() {
-    console.log(this.message)
     var messageModel = new MessageModel()
     messageModel.body = this.message;
-    messageModel.activeStatusId = 1;
+    this.message="";
+    messageModel.activeStatusId = ActiceStatusTypeEnum.Active;
     messageModel.createdDate = new Date().toString();
-
-    // this.chatServie.SendMessage(messageModel).subscribe((msg:MessageModel) => {
-    //   if(!msg) return;
-    //   if(!this.messageList.map(msg => msg.messageId).includes(msg.messageId)){
-    //     this.messageList.push(msg);
-    //     this.cdRef.detectChanges();
-    //   }
-    // });
+    this.chatServie.SendMessage(messageModel).subscribe();
   }
 
   SendReply(){

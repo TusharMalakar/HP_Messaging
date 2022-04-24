@@ -11,9 +11,9 @@ namespace HP_Messaging.Entities
         public int MessageReplyId { get; set; }
         public string Body { get; set; }
         public int MessageId { get; set; }
-        public int ActiceStatusId { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public int ActiveStatusId { get; set; }
+        public string CreatedDate { get; set; }
+        public string UpdatedDate { get; set; }
         public virtual User User { get; set; }
     }
 }

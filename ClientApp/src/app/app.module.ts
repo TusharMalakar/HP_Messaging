@@ -11,13 +11,15 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { AuthGuardService as AuthGuard} from './services/auth-gard.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
+import { MessageBoxComponent } from './components/message-box/message-box.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     MessageComponent,
-    SignInComponent
+    SignInComponent,
+    MessageBoxComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -1,30 +1,62 @@
 
 
-
+<style>
+  .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+ }
+</style>
 
 <div class="container shadow p-3 mb-5 bg-white rounded">
-  <h1 >display messages here</h1>
-  <div class="container">
-      <table class="table table-striped table-bordered">
-          <thead>
-              <tr>
-                  <th>Boy</th>
-                  <th>Author</th>
-                  <th>Date</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let message of messageList">
-                  <td>{{message.body}}</td>
-                  <td>{{message.user.email}}</td>
-                  <td>{{message.createdDate}}</td>
-              </tr>
-          </tbody>
-      </table>
+  <div *ngFor="let message of messageList">
+
+    <div class="d-flex flex-row-reverse">
+      <div class="card w-75">
+        <div class="shadow-sm p-3 mb-5 bg-white rounded">
+          <div class="card-body">
+            <p class="card-text">{{message.body}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="message && message.messageReplys.length > 0">
+      <div *ngFor="let reply of message.messageReplys">
+        <div class="d-flex flex-row-reverse">
+          <div class="card w-50">
+            <div class="shadow-none p-3 mb-5 bg-light rounded">
+              <div class="card-body">
+                <p class="card-text">{{reply.body}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <br>
-  <input id="message" [(ngModel)]="message"/>
-  <button (click)="SendMessage()">Send message</button>
+
+  <div class="footer">
+    <div class="container shadow p-3 mb-5 bg-white rounded">
+      <div class="d-flex flex-row-reverse">
+        <button (click)="SendMessage()">Send</button>
+        <input style="width: 80%; height: 50px;" id="message" [(ngModel)]="message"/>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<!-- <message-box></message-box> -->
+
+
+
+
+
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HP_Messaging.Migrations
 {
@@ -17,7 +16,7 @@ namespace HP_Messaging.Migrations
                     LastName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
-                    DateCreated = table.Column<DateTime>(nullable: false)
+                    CreatedDate = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,9 +30,9 @@ namespace HP_Messaging.Migrations
                     MessageId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Body = table.Column<string>(nullable: true),
-                    ActiceStatusId = table.Column<int>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: true),
+                    ActiveStatusId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<string>(nullable: true),
+                    UpdatedDate = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -55,9 +54,9 @@ namespace HP_Messaging.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Body = table.Column<string>(nullable: true),
                     MessageId = table.Column<int>(nullable: false),
-                    ActiceStatusId = table.Column<int>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: true),
+                    ActiveStatusId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<string>(nullable: true),
+                    UpdatedDate = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

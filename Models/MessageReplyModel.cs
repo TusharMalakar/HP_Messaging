@@ -11,8 +11,8 @@ namespace HP_Messaging.Models
         public int MessageId { get; set; }
         [Required]
         public int ActiveStatusId { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public string CreatedDate { get; set; }
+        public string UpdatedDate { get; set; }
         public virtual UserModel User { get; set; }
     }
 }
