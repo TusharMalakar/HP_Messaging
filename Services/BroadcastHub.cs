@@ -15,4 +15,10 @@ namespace HP_Messaging.Services
     {
         Task BroadcastMessage(string type, object payload);
     }
+
+    /*********TO DO*******
+     * 1. Create Service to notify a specific Group
+     * 2. Create Service to notify a specific chat-user
+     * 
+     *************** ****/
 }
