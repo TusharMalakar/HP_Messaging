@@ -1,18 +1,20 @@
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { ChatService } from 'src/app/services/chat.service';
-import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, Inject, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { ActiceStatusTypeEnum } from 'src/app/models/common.enum';
 import * as signalR from '@microsoft/signalr';
 import { MessageModel } from 'src/app/models/message.model';
+import { MessageReplyModel } from 'src/app/models/mesage-reply.model';
+import { Observable } from 'rxjs';
 
 
 @Component({
   selector: 'message-home',
   templateUrl: './message.component.html',
 })
-export class MessageComponent implements OnInit, OnChanges, AfterViewInit{
+export class MessageComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked, AfterContentChecked, OnDestroy{
 
   message: string;
   baseUrl: string;
@@ -20,6 +22,10 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit{
   messageList: MessageModel[];
   replyToMessage: MessageModel;
   isReplying:boolean = false;
+
+  msgListSubs: any;
+  sendMsgSubs: any;
+  sendMsgReplySubs: any;
 
 
   constructor(@Inject('BASE_URL') _baseUrl: string, private _chatService: ChatService, private cdRef :ChangeDetectorRef) {
@@ -31,6 +37,15 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit{
   }
   ngAfterViewInit(){
     window.scrollTo(0, document.body.scrollHeight);
+  }
+  ngAfterViewChecked(){
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+  ngAfterContentChecked(){
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+  ngOnDestroy() {
+    //destroy all subscriptions
   }
 
   ngOnInit(): void {
@@ -70,13 +85,19 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit{
     this.GetMessages();
   }
 
+  GetMessages(){
+    this.msgListSubs = this.chatServie.GetAllMessage().subscribe((msgList:MessageModel[]) => {
+      this.messageList=msgList;
+    })
+  }
+
   SendMessage() {
     var messageModel = new MessageModel()
     messageModel.body = this.message;
-    this.message="";
-    messageModel.activeStatusId = ActiceStatusTypeEnum.Active;
     messageModel.createdDate = new Date().toString();
-    this.chatServie.SendMessage(messageModel).subscribe();
+    messageModel.activeStatusId = ActiceStatusTypeEnum.Active;
+    this.sendMsgSubs = this.chatServie.SendMessage(messageModel).subscribe();
+    this.message="";
   }
 
   EnableReply(msg:MessageModel){
@@ -92,15 +113,18 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit{
   }
 
   SendReply(){
+    var replyModel = new MessageReplyModel();
+    replyModel.messageId = this.replyToMessage.messageId;
+    replyModel.body = this.message;
+    replyModel.activeStatusId = ActiceStatusTypeEnum.Active;
+    replyModel.createdDate = new Date().toString();
+    this.sendMsgReplySubs = this.chatServie.ReplyMessage(replyModel).subscribe();
+
     this.isReplying=false;
     this.message="";
     this.replyToMessage=null;
     this.cdRef.detectChanges();
   }
 
-  GetMessages(){
-    this.chatServie.GetAllMessage().subscribe((msgList:MessageModel[]) => {
-      this.messageList=msgList;
-    })
-  }
+
 }
