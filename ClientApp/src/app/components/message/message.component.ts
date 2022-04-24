@@ -106,7 +106,7 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
     this.cdRef.detectChanges();
   }
 
-  DisableRely(){
+  CancelRely(){
     this.isReplying=false;
     this.replyToMessage=null;
     this.cdRef.detectChanges();
@@ -124,6 +124,10 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
     this.message="";
     this.replyToMessage=null;
     this.cdRef.detectChanges();
+  }
+
+  UpdateMessage(){
+
   }
 
 

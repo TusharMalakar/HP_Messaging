@@ -46,7 +46,11 @@
 
   <div class="footer">
     <div *ngIf="isReplying==true && replyToMessage != null">
-      <p class="text-secondary">{{replyToMessage.body}}</p>
+      <p class="text-secondary">
+        <i class="fa fa-reply"></i>
+        {{replyToMessage.body}}
+        <span class="text-danger" (click)="CancelRely()">  x</span>
+      </p>
     </div>
 
     <div class="container shadow p-3 mb-5 bg-white rounded">
