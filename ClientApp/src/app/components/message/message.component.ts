@@ -18,6 +18,8 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit{
   baseUrl: string;
   chatServie: ChatService;
   messageList: MessageModel[];
+  replyToMessage: MessageModel;
+  isReplying:boolean = false;
 
 
   constructor(@Inject('BASE_URL') _baseUrl: string, private _chatService: ChatService, private cdRef :ChangeDetectorRef) {
@@ -77,8 +79,23 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit{
     this.chatServie.SendMessage(messageModel).subscribe();
   }
 
-  SendReply(){
+  EnableReply(msg:MessageModel){
+    this.replyToMessage = msg;
+    this.isReplying = true;
+    this.cdRef.detectChanges();
+  }
 
+  DisableRely(){
+    this.isReplying=false;
+    this.replyToMessage=null;
+    this.cdRef.detectChanges();
+  }
+
+  SendReply(){
+    this.isReplying=false;
+    this.message="";
+    this.replyToMessage=null;
+    this.cdRef.detectChanges();
   }
 
   GetMessages(){

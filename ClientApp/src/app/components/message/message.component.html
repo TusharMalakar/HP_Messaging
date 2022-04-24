@@ -10,11 +10,13 @@
     text-align: center;
  }
 </style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 <div class="container shadow p-3 mb-5 bg-white rounded">
   <div *ngFor="let message of messageList">
 
     <div class="d-flex flex-row-reverse">
+      <i class="fa fa-reply" (click)="EnableReply(message)"></i>
       <div class="card w-75">
         <div class="shadow-sm p-3 mb-5 bg-white rounded">
           <div class="card-body">
@@ -45,7 +47,8 @@
   <div class="footer">
     <div class="container shadow p-3 mb-5 bg-white rounded">
       <div class="d-flex flex-row-reverse">
-        <button (click)="SendMessage()">Send</button>
+        <button [hidden]="isReplying==true" (click)="SendMessage()">Send</button>
+        <button [hidden]="isReplying==false" (click)="SendReply()">Send</button>
         <input style="width: 80%; height: 50px;" id="message" [(ngModel)]="message"/>
       </div>
     </div>
