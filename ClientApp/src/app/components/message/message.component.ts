@@ -2,12 +2,10 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { ChatService } from 'src/app/services/chat.service';
 import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, Inject, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import { ActiceStatusTypeEnum } from 'src/app/models/common.enum';
+import { ActiveStatusTypeEnum } from 'src/app/models/common.enum';
 import * as signalR from '@microsoft/signalr';
 import { MessageModel } from 'src/app/models/message.model';
 import { MessageReplyModel } from 'src/app/models/mesage-reply.model';
-import { Observable } from 'rxjs';
 
 
 @Component({
@@ -95,7 +93,7 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
     var messageModel = new MessageModel()
     messageModel.body = this.message;
     messageModel.createdDate = new Date().toString();
-    messageModel.activeStatusId = ActiceStatusTypeEnum.Active;
+    messageModel.activeStatusId = ActiveStatusTypeEnum.Active;
     this.sendMsgSubs = this.chatServie.SendMessage(messageModel).subscribe();
     this.message="";
   }
@@ -116,13 +114,21 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
     var replyModel = new MessageReplyModel();
     replyModel.messageId = this.replyToMessage.messageId;
     replyModel.body = this.message;
-    replyModel.activeStatusId = ActiceStatusTypeEnum.Active;
+    replyModel.activeStatusId = ActiveStatusTypeEnum.Active;
     replyModel.createdDate = new Date().toString();
     this.sendMsgReplySubs = this.chatServie.ReplyMessage(replyModel).subscribe();
 
     this.isReplying=false;
     this.message="";
     this.replyToMessage=null;
+    this.cdRef.detectChanges();
+  }
+
+  DeleteMessage(_msg:MessageModel){
+    var megRef = this.messageList.find(msg => msg.messageId != _msg.messageId);
+    megRef.activeStatusId = ActiveStatusTypeEnum.Removed;
+    _msg.activeStatusId = ActiveStatusTypeEnum.Removed;
+    this.chatServie.SendMessage(_msg).subscribe();
     this.cdRef.detectChanges();
   }
 

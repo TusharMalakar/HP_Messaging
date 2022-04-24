@@ -1,5 +1,5 @@
 
-export enum ActiceStatusTypeEnum
+export enum ActiveStatusTypeEnum
 {
     Active = 1,
     Edited = 2,

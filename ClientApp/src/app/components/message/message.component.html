@@ -22,9 +22,13 @@
           <div class="card-body">
             <p class="card-text">{{message.body}}</p>
           </div>
+          <span class="text-info" (click)="UpdateMessage()">...</span>
+          <span (click)="DeleteMessage(message)" class="text-danger" style="position: absolute;right: 0; padding-right:10px;">x</span>
         </div>
       </div>
     </div>
+    <div *ngIf="message.updatedDate">{{message.updatedDate}}</div>
+
 
     <div *ngIf="message && message.messageReplys.length > 0">
       <div *ngFor="let reply of message.messageReplys">
@@ -40,6 +44,7 @@
       </div>
     </div>
 
+    <br>
   </div>
 
   <br>
