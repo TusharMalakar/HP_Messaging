@@ -13,7 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
 import { EditMessageDialog } from './components/edit-message/edit-message.dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
+    MatDialogModule,
     RouterModule.forRoot([
       {
         path: '',
@@ -49,7 +49,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   providers: [
             AuthGuard,
             ChatService
+            ,{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
             ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[EditMessageDialog]
 })
 export class AppModule { }

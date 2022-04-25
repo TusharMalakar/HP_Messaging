@@ -1,24 +1,16 @@
 
-
-<!-- <div class="d-flex flex-row-reverse">
-  <div class="card w-75">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    </div>
+<div style="height:200px; width:600px;">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Edit Message</h5>
+  </div>
+  <form [formGroup]="messageForm" (ngSubmit)="updateMessage()">
+    <input type="text" class="modal-body" style="width: 100%;" formControlName="body">
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeDialog()">
+      Discard
+    </button>
+    <button type="button" class="btn btn-primary" (click)="updateMessage()">Update</button>
   </div>
 </div>
-
-<div class="d-flex flex-row-reverse">
-  <div class="card w-50">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    </div>
-  </div>
-</div> -->
-
-
-
-
 

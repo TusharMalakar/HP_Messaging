@@ -6,6 +6,8 @@ import { ActiveStatusTypeEnum } from 'src/app/models/common.enum';
 import * as signalR from '@microsoft/signalr';
 import { MessageModel } from 'src/app/models/message.model';
 import { MessageReplyModel } from 'src/app/models/mesage-reply.model';
+import { MatDialog } from '@angular/material';
+import { EditMessageDialog } from '../edit-message/edit-message.dialog';
 
 @Component({
   selector: 'message-home',
@@ -26,10 +28,16 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
   sendMsgReplySubs: any;
 
 
-  constructor(@Inject('BASE_URL') _baseUrl: string, private _chatService: ChatService, private cdRef :ChangeDetectorRef) {
+  constructor(
+    @Inject('BASE_URL') _baseUrl: string
+    ,private _chatService: ChatService
+    ,private cdRef :ChangeDetectorRef
+    ,public dialog: MatDialog
+    ) {
     this.baseUrl=_baseUrl;
     this.chatServie = _chatService;
   }
+
   ngOnChanges() {
     window.scrollTo(0, document.body.scrollHeight);
   }
@@ -136,5 +144,12 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
 
   }
 
+  openDialog(_msgModel:MessageModel): void {
+    const dialogRef = this.dialog.open(EditMessageDialog,{data: { messageModel:_msgModel }});
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+  }
 
 }
