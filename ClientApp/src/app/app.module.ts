@@ -13,7 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
 import { EditMessageDialog } from './components/edit-message/edit-message.dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
+import {MatMenuModule,MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -29,6 +29,7 @@ import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dia
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
+    MatMenuModule,
     RouterModule.forRoot([
       {
         path: '',

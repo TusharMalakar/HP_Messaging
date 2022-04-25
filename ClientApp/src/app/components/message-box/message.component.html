@@ -16,18 +16,24 @@
 
   <div *ngFor="let message of messageList">
     <div class="d-flex flex-row-reverse">
-      <i class="fa fa-reply" (click)="EnableReply(message)"></i>
+      <!-- <i class="fa fa-reply" (click)="EnableReply(message)"></i> -->
       <div class="card w-75">
         <div class="shadow-sm p-3 mb-5 bg-white rounded">
           <div class="card-body">
             <p class="card-text">{{message.body}}</p>
           </div>
-          <span class="text-info" (click)="openDialog(message)">...</span>
-          <span (click)="DeleteMessage(message)" class="text-danger" style="position: absolute;right: 0; padding-right:10px;">x</span>
+          <span class="text-info" mat-button [matMenuTriggerFor]="menu">...</span>
+          <mat-menu #menu="matMenu" yPosition="above">
+            <button mat-menu-item (click)="EnableReply(message)">Reply</button>
+            <button mat-menu-item (click)="openDialog(message)">Edit</button>
+            <button mat-menu-item (click)="DeleteMessage(message)">Delete</button>
+          </mat-menu>
+          <!-- <span class="text-info" (click)="openDialog(message)">...</span> -->
+          <!-- <span (click)="DeleteMessage(message)" class="text-danger" style="position: absolute;right: 0; padding-right:10px;">x</span> -->
+          <span *ngIf="message && message.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Updated On: {{message?.updatedDate}}</span>
         </div>
       </div>
     </div>
-    <div *ngIf="message.updatedDate">{{message.updatedDate}}</div>
 
 
     <div *ngIf="message && message.messageReplys.length > 0">
