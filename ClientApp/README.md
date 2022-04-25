@@ -1,5 +1,7 @@
 # HP_Messaging
 
+## Note: Run 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine' command from powershell to add library for angular
+#
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
 
 ## Development server

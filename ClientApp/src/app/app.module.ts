@@ -12,7 +12,8 @@ import { AuthGuardService as AuthGuard} from './services/auth-gard.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
 import { EditMessageDialog } from './components/edit-message/edit-message.dialog';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { EditMessageDialog } from './components/edit-message/edit-message.dialog
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MatFormFieldModule,
     RouterModule.forRoot([
       {
         path: '',
@@ -40,7 +42,8 @@ import { EditMessageDialog } from './components/edit-message/edit-message.dialog
       }
 
       ,{ path: '**', redirectTo: 'signIn' }
-    ])
+    ]),
+    BrowserAnimationsModule
   ],
   exports: [RouterModule],
   providers: [
