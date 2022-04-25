@@ -22,7 +22,7 @@ namespace HP_Messaging.Security
                 b = Convert.FromBase64String(encrString);
                 decrypted = System.Text.ASCIIEncoding.ASCII.GetString(b);
             }
-            catch (FormatException fe)
+            catch 
             {
                 decrypted = "";
             }

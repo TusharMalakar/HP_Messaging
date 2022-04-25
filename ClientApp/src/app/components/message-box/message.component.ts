@@ -7,7 +7,6 @@ import * as signalR from '@microsoft/signalr';
 import { MessageModel } from 'src/app/models/message.model';
 import { MessageReplyModel } from 'src/app/models/mesage-reply.model';
 
-
 @Component({
   selector: 'message-home',
   templateUrl: './message.component.html',
@@ -20,6 +19,7 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
   messageList: MessageModel[];
   replyToMessage: MessageModel;
   isReplying:boolean = false;
+  isEditing:boolean=false;
 
   msgListSubs: any;
   sendMsgSubs: any;

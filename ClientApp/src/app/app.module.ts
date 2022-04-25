@@ -6,12 +6,13 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
-import { MessageComponent } from './components/message/message.component';
+import { MessageComponent } from './components/message-box/message.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { AuthGuardService as AuthGuard} from './services/auth-gard.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
-import { MessageBoxComponent } from './components/message-box/message-box.component';
+import { EditMessageDialog } from './components/edit-message/edit-message.dialog';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +20,7 @@ import { MessageBoxComponent } from './components/message-box/message-box.compon
     NavMenuComponent,
     MessageComponent,
     SignInComponent,
-    MessageBoxComponent
+    EditMessageDialog
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -42,7 +43,10 @@ import { MessageBoxComponent } from './components/message-box/message-box.compon
     ])
   ],
   exports: [RouterModule],
-  providers: [AuthGuard, ChatService],
+  providers: [
+            AuthGuard,
+            ChatService
+            ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
