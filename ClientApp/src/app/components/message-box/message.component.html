@@ -1,6 +1,12 @@
 
 
 <style>
+  .avatar {
+    vertical-align: middle;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
   .footer {
     position: fixed;
     left: 0;
@@ -12,73 +18,72 @@
 </style>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
-<div class="container shadow p-3 mb-5 bg-white rounded">
-
-  <div *ngFor="let message of messageList">
-    <div class="d-flex flex-row-reverse">
-      <!-- <i class="fa fa-reply" (click)="EnableReply(message)"></i> -->
-      <div class="card w-75">
-        <div class="shadow-sm p-3 mb-5 bg-white rounded">
-          <div class="card-body">
-            <p class="card-text">{{message.body}}</p>
-          </div>
-          <span class="text-info" mat-button [matMenuTriggerFor]="menu">...</span>
-          <mat-menu #menu="matMenu" yPosition="above">
-            <button mat-menu-item (click)="EnableReply(message)">Reply</button>
-            <button mat-menu-item (click)="OpenEditTextDialog(message, 'Message')">Edit</button>
-            <button mat-menu-item (click)="DeleteMessage(message)">Delete</button>
-          </mat-menu>
-          <!-- <span class="text-info" (click)="openDialog(message)">...</span> -->
-          <!-- <span (click)="DeleteMessage(message)" class="text-danger" style="position: absolute;right: 0; padding-right:10px;">x</span> -->
-          <small *ngIf="message && message.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Last edited on {{message?.updatedDate}}</small>
-        </div>
-      </div>
-    </div>
-
-
-    <div *ngIf="message && message.messageReplys.length > 0">
-      <div *ngFor="let reply of message.messageReplys">
-        <div class="d-flex flex-row-reverse">
-          <div class="card w-50">
-            <div class="shadow-none p-3 mb-5 bg-light rounded">
-              <div class="card-body">
-                <p class="card-text">{{reply.body}}</p>
-                <span class="text-info" mat-button [matMenuTriggerFor]="menu">...</span>
-                <mat-menu #menu="matMenu" yPosition="above">
-                  <button mat-menu-item (click)="OpenEditTextDialog(reply, 'Reply')">Edit</button>
-                  <button mat-menu-item (click)="DeleteReplyMessage(reply)">Delete</button>
-                </mat-menu>
-                <small *ngIf="reply && reply.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Last edited on {{reply?.updatedDate}}</small>
-              </div>
+<div class="container shadow p-3 mb-4 bg-white rounded">
+  <div style=" margin-bottom: 100px;">
+    <div *ngFor="let message of messageList">
+      <div class="d-flex flex-row-reverse">
+        <!-- <i class="fa fa-reply" (click)="EnableReply(message)"></i> -->
+        <div class="card w-75">
+          <div class="shadow-xs p-0 mb-0 bg-white rounded">
+            <div class="card-body">
+              <p class="card-text">{{message.body}}</p>
+              <span class="text-info" mat-button [matMenuTriggerFor]="menu">...</span>
+              <mat-menu #menu="matMenu" yPosition="above">
+                <button mat-menu-item (click)="EnableReply(message)">Reply</button>
+                <button mat-menu-item (click)="OpenEditTextDialog(message, 'Message')">Edit</button>
+                <button mat-menu-item (click)="DeleteMessage(message)">Delete</button>
+              </mat-menu>
+              <small *ngIf="message && message.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Last edited on {{message?.updatedDate}}</small>
             </div>
           </div>
         </div>
+        <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?r=pg" alt="Avatar" class="avatar"/>
       </div>
+
+
+      <div *ngIf="message && message.messageReplys.length > 0">
+        <div *ngFor="let reply of message.messageReplys">
+          <div class="d-flex flex-row-reverse">
+            <div class="card w-50">
+              <div class="shadow-none p-0 mb-0 bg-light rounded">
+                <div class="card-body">
+                  <p class="card-text">{{reply.body}}</p>
+                    <span class="text-info" mat-button [matMenuTriggerFor]="menu">...</span>
+                    <mat-menu #menu="matMenu" yPosition="above">
+                      <button mat-menu-item (click)="OpenEditTextDialog(reply, 'Reply')">Edit</button>
+                      <button mat-menu-item (click)="DeleteReplyMessage(reply)">Delete</button>
+                    </mat-menu>
+                  <small *ngIf="reply && reply.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Last edited on {{reply?.updatedDate}}</small>
+                </div>
+              </div>
+            </div>
+            <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?r=pg" alt="Avatar" class="avatar"/>
+          </div>
+        </div>
+      </div>
+      <br>
     </div>
 
     <br>
-  </div>
 
-  <br>
+    <div class="footer">
+      <div *ngIf="isReplying==true && replyToMessage != null">
+        <p class="text-secondary">
+          <i class="fa fa-reply"></i>
+          {{replyToMessage.body}}
+          <span class="text-danger" (click)="CancelReply()">  x</span>
+        </p>
+      </div>
 
-  <div class="footer">
-    <div *ngIf="isReplying==true && replyToMessage != null">
-      <p class="text-secondary">
-        <i class="fa fa-reply"></i>
-        {{replyToMessage.body}}
-        <span class="text-danger" (click)="CancelReply()">  x</span>
-      </p>
-    </div>
-
-    <div class="container shadow p-3 mb-5 bg-white rounded">
-      <div class="d-flex flex-row-reverse">
-        <button [hidden]="isReplying==true" (click)="SaveMessage()">Send</button>
-        <button [hidden]="isReplying==false" (click)="SaveReply()">Send</button>
-        <input style="width: 80%; height: 50px;" id="message" [(ngModel)]="message"/>
+      <div class="container shadow p-3 mb-5 bg-white rounded">
+        <div class="d-flex flex-row-reverse">
+          <button [hidden]="isReplying==true" (click)="SaveMessage()">Send</button>
+          <button [hidden]="isReplying==false" (click)="SaveReply()">Send</button>
+          <input style="width: 80%; height: 50px;" id="message" [(ngModel)]="message"/>
+        </div>
       </div>
     </div>
   </div>
-
 </div>
 
 
