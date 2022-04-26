@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoMapper;
-using HP_Messaging.Entities;
+using HP_Messaging.Data.Entities;
 using HP_Messaging.Models;
 
 namespace HP_Messaging.Services

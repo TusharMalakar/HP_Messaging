@@ -1,5 +1,4 @@
 
-import { FormControl, FormGroup } from '@angular/forms';
 import { ChatService } from 'src/app/services/chat.service';
 import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActiveStatusTypeEnum } from 'src/app/models/common.enum';
@@ -8,6 +7,7 @@ import { MessageModel } from 'src/app/models/message.model';
 import { MessageReplyModel } from 'src/app/models/mesage-reply.model';
 import { MatDialog } from '@angular/material';
 import { EditTextDialog } from '../edit-text/edit-text.dialog';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'message-home',
@@ -15,6 +15,7 @@ import { EditTextDialog } from '../edit-text/edit-text.dialog';
 })
 export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy{
 
+  subs = new SubSink();
   message: string;
   baseUrl: string;
   chatServie: ChatService;
@@ -46,7 +47,7 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     window.scrollTo(0, document.body.scrollHeight);
   }
   ngOnDestroy() {
-    //destroy all subscriptions
+    this.subs.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -67,7 +68,8 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         case 'MessageAdded':
           if(!this.messageList.map(msg => msg.messageId).includes(object.messageId)){
             this.messageList.push(object);
-            this.cdRef.detectChanges();
+            if (!this.cdRef['destroyed'])
+              this.cdRef.detectChanges();
             window.scrollTo(0, document.body.scrollHeight);
           }
           break;
@@ -76,27 +78,30 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
             this.messageList = this.messageList.filter(msg => msg.messageId != object.messageId);
             this.messageList.push(object);
             this.messageList = this.messageList.sort((a,b) => a.messageId-b.messageId);
-            this.cdRef.detectChanges();
+            if (!this.cdRef['destroyed'])
+              this.cdRef.detectChanges();
           }
           break;
         case 'MessageReplyAdded':
           if(this.messageList.map(msg => msg.messageId).includes(object.messageId)){
-            var msgRef = this.messageList.find(msg => msg.messageId=object.messageId);
+            var msgRef = this.messageList.find(msg => msg.messageId==object.messageId);
             msgRef.messageReplys.push(object);
             this.messageList = this.messageList.filter(msg => msg.messageId != msgRef.messageId);
             this.messageList.push(msgRef);
             this.messageList = this.messageList.sort((a,b) => a.messageId-b.messageId);
-            this.cdRef.detectChanges();
+            if (!this.cdRef['destroyed'])
+              this.cdRef.detectChanges();
           }
           break;
         case 'MessageReplyUpdated' || 'MessageReplyRemoved':
           if(this.messageList.map(msg => msg.messageId).includes(object.messageId)){
-            var msgRef = this.messageList.find(msg => msg.messageId=object.messageId);
+            var msgRef = this.messageList.find(msg => msg.messageId==object.messageId);
             msgRef.messageReplys.push(object);
             this.messageList = this.messageList.filter(msg => msg.messageId != msgRef.messageId);
             this.messageList.push(msgRef);
             this.messageList = this.messageList.sort((a,b) => a.messageId-b.messageId);
-            this.cdRef.detectChanges();
+            if (!this.cdRef['destroyed'])
+              this.cdRef.detectChanges();
           }
           break;
       }
@@ -105,7 +110,7 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   GetMessages(){
-    this.msgListSubs = this.chatServie.GetAllMessage().subscribe((msgList:MessageModel[]) => {
+    this.subs.sink = this.msgListSubs = this.chatServie.GetAllMessage().subscribe((msgList:MessageModel[]) => {
       this.messageList=msgList;
     })
   }
@@ -115,20 +120,22 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     messageModel.body = this.message;
     messageModel.createdDate = this.GetFormatedDate();
     messageModel.activeStatusId = ActiveStatusTypeEnum.Active;
-    this.sendMsgSubs = this.chatServie.SaveMessage(messageModel).subscribe();
+    this.subs.sink = this.sendMsgSubs = this.chatServie.SaveMessage(messageModel).subscribe();
     this.message="";
   }
 
   EnableReply(msg:MessageModel){
     this.replyToMessage = msg;
     this.isReplying = true;
-    this.cdRef.detectChanges();
+    if (!this.cdRef['destroyed'])
+      this.cdRef.detectChanges();
   }
 
   CancelReply(){
     this.isReplying=false;
     this.replyToMessage=null;
-    this.cdRef.detectChanges();
+    if (!this.cdRef['destroyed'])
+      this.cdRef.detectChanges();
   }
 
   SaveReply(){
@@ -137,25 +144,27 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     replyModel.body = this.message;
     replyModel.activeStatusId = ActiveStatusTypeEnum.Active;
     replyModel.createdDate = this.GetFormatedDate();
-    this.sendMsgReplySubs = this.chatServie.SaveReply(replyModel).subscribe();
+    this.subs.sink = this.sendMsgReplySubs = this.chatServie.SaveReply(replyModel).subscribe();
 
     this.isReplying=false;
     this.message="";
     this.replyToMessage=null;
-    this.cdRef.detectChanges();
+    if (!this.cdRef['destroyed'])
+      this.cdRef.detectChanges();
   }
 
   DeleteMessage(_msg:MessageModel){
     var megRef = this.messageList.find(msg => msg.messageId != _msg.messageId);
     megRef.activeStatusId = ActiveStatusTypeEnum.Removed;
     _msg.activeStatusId = ActiveStatusTypeEnum.Removed;
-    this.chatServie.SaveMessage(_msg).subscribe();
-    this.cdRef.detectChanges();
+    this.subs.sink = this.chatServie.SaveMessage(_msg).subscribe();
+    if (!this.cdRef['destroyed'])
+      this.cdRef.detectChanges();
   }
 
   OpenEditTextDialog(model:any, type:string): void {
     const dialogRef = this.dialog.open(EditTextDialog,{data: { text:model.body}});
-    dialogRef.afterClosed().subscribe(result => {
+    this.subs.sink = dialogRef.afterClosed().subscribe(result => {
       if(result && result.data && result.event=='Updated'){
         model.body = result.data;
         model.activeStatusId = ActiveStatusTypeEnum.Edited;
@@ -179,4 +188,5 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     let options = {hour: "2-digit", minute: "2-digit"};
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString("en-us", options as Intl.DateTimeFormatOptions);
   }
+
 }

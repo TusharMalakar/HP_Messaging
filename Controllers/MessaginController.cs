@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using HP_Messaging.Entities;
 using HP_Messaging.Models;
 using HP_Messaging.Security;
 using HP_Messaging.Services;
@@ -7,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.SignalR;
+using HP_Messaging.Data;
 
 namespace HP_Messaging.Controllers
 {

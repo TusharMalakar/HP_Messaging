@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HP_Messaging.Models;
 using HP_Messaging.Services;
-using HP_Messaging.Entities;
+using HP_Messaging.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 

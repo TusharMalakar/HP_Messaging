@@ -2,11 +2,12 @@
 using AutoMapper;
 using System.Linq;
 using HP_Messaging.Models;
-using HP_Messaging.Entities;
 using HP_Messaging.Security;
 using HP_Messaging.IServices;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using HP_Messaging.Data;
+using HP_Messaging.Data.Entities;
 
 namespace HP_Messaging.Services
 {

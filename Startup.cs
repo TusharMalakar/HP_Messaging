@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using HP_Messaging.Services;
-using HP_Messaging.Entities;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
+using HP_Messaging.Data;
 
 namespace HP_Messaging
 {

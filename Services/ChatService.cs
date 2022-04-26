@@ -5,9 +5,10 @@ using HP_Messaging.Models;
 using HP_Messaging.IServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using HP_Messaging.Entities;
+using HP_Messaging.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
+using HP_Messaging.Data;
 
 namespace HP_Messaging.Services
 {
@@ -27,9 +28,10 @@ namespace HP_Messaging.Services
         public async Task<MessageModel> SaveMessage(MessageModel message)
         {
             var messageEntity = mapper.Map<Message>(message);
-            messageEntity.User = dbContext.profile;
+            
             string eventType = string.Empty;
-            //unitOfWork.DetachAll<Message>();
+            messageEntity.User = null;
+            messageEntity.UserId = dbContext.profile.UserId;
             if (messageEntity.MessageId == 0)
             {
                 dbContext.Messages.Add(messageEntity);
@@ -46,6 +48,7 @@ namespace HP_Messaging.Services
             }
                 
             await dbContext.SaveChangesAsync();
+            messageEntity.User = dbContext.profile;
             await hubContext.Clients.All.BroadcastMessage(eventType, messageEntity);
             return mapper.Map<MessageModel>(messageEntity);
         }
@@ -53,9 +56,10 @@ namespace HP_Messaging.Services
         public async Task<MessageReplyModel> SaveReply(MessageReplyModel reply)
         {
             var messageReplyEntity = mapper.Map<MessageReply>(reply);
-            messageReplyEntity.User = dbContext.profile;
-
+            
             string eventType = string.Empty;
+            messageReplyEntity.User = null;
+            messageReplyEntity.UserId = dbContext.profile.UserId;
             if (messageReplyEntity.MessageReplyId == 0)
             {
                 dbContext.MessageReplies.Add(messageReplyEntity);
@@ -71,6 +75,7 @@ namespace HP_Messaging.Services
             }
                 
             await dbContext.SaveChangesAsync();
+            messageReplyEntity.User = dbContext.profile;
             await hubContext.Clients.All.BroadcastMessage(eventType, messageReplyEntity);
             return mapper.Map<MessageReplyModel>(messageReplyEntity);
         }

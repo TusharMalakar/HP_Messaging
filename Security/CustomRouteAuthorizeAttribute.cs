@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Principal;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Filters;
-using HP_Messaging.Entities;
 using Microsoft.EntityFrameworkCore;
+using HP_Messaging.Data;
 
 namespace HP_Messaging.Security
 {
