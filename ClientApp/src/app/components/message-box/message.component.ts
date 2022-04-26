@@ -1,19 +1,19 @@
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { ChatService } from 'src/app/services/chat.service';
-import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, Inject, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActiveStatusTypeEnum } from 'src/app/models/common.enum';
 import * as signalR from '@microsoft/signalr';
 import { MessageModel } from 'src/app/models/message.model';
 import { MessageReplyModel } from 'src/app/models/mesage-reply.model';
 import { MatDialog } from '@angular/material';
-import { EditMessageDialog } from '../edit-message/edit-message.dialog';
+import { EditTextDialog } from '../edit-text/edit-text.dialog';
 
 @Component({
   selector: 'message-home',
   templateUrl: './message.component.html',
 })
-export class MessageComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked, AfterContentChecked, OnDestroy{
+export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy{
 
   message: string;
   baseUrl: string;
@@ -22,6 +22,7 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
   replyToMessage: MessageModel;
   isReplying:boolean = false;
   isEditing:boolean=false;
+  public isCollapsed = false;
 
   msgListSubs: any;
   sendMsgSubs: any;
@@ -44,12 +45,6 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
   ngAfterViewInit(){
     window.scrollTo(0, document.body.scrollHeight);
   }
-  ngAfterViewChecked(){
-    window.scrollTo(0, document.body.scrollHeight);
-  }
-  ngAfterContentChecked(){
-    window.scrollTo(0, document.body.scrollHeight);
-  }
   ngOnDestroy() {
     //destroy all subscriptions
   }
@@ -66,24 +61,42 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
       return console.error(err.toString());
     });
 
-    connection.on("BroadcastMessage", (type, object) => {
-      console.log("message broadcast received", type, object);
-      switch(type){
-        case 'Message':
+    connection.on("BroadcastMessage", (eventType, object) => {
+      console.log("message broadcast received", eventType, object);
+      switch(eventType){
+        case 'MessageAdded':
           if(!this.messageList.map(msg => msg.messageId).includes(object.messageId)){
             this.messageList.push(object);
             this.cdRef.detectChanges();
             window.scrollTo(0, document.body.scrollHeight);
           }
           break;
-        case 'MessageReply':
+        case 'MessageUpdated' || 'MessageRemoved':
+          if(this.messageList.map(msg => msg.messageId).includes(object.messageId)){
+            this.messageList = this.messageList.filter(msg => msg.messageId != object.messageId);
+            this.messageList.push(object);
+            this.messageList = this.messageList.sort((a,b) => a.messageId-b.messageId);
+            this.cdRef.detectChanges();
+          }
+          break;
+        case 'MessageReplyAdded':
           if(this.messageList.map(msg => msg.messageId).includes(object.messageId)){
             var msgRef = this.messageList.find(msg => msg.messageId=object.messageId);
             msgRef.messageReplys.push(object);
             this.messageList = this.messageList.filter(msg => msg.messageId != msgRef.messageId);
             this.messageList.push(msgRef);
+            this.messageList = this.messageList.sort((a,b) => a.messageId-b.messageId);
             this.cdRef.detectChanges();
-            window.scrollTo(0, document.body.scrollHeight);
+          }
+          break;
+        case 'MessageReplyUpdated' || 'MessageReplyRemoved':
+          if(this.messageList.map(msg => msg.messageId).includes(object.messageId)){
+            var msgRef = this.messageList.find(msg => msg.messageId=object.messageId);
+            msgRef.messageReplys.push(object);
+            this.messageList = this.messageList.filter(msg => msg.messageId != msgRef.messageId);
+            this.messageList.push(msgRef);
+            this.messageList = this.messageList.sort((a,b) => a.messageId-b.messageId);
+            this.cdRef.detectChanges();
           }
           break;
       }
@@ -97,12 +110,12 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
     })
   }
 
-  SendMessage() {
+  SaveMessage() {
     var messageModel = new MessageModel()
     messageModel.body = this.message;
-    messageModel.createdDate = new Date().toString();
+    messageModel.createdDate = this.GetFormatedDate();
     messageModel.activeStatusId = ActiveStatusTypeEnum.Active;
-    this.sendMsgSubs = this.chatServie.SendMessage(messageModel).subscribe();
+    this.sendMsgSubs = this.chatServie.SaveMessage(messageModel).subscribe();
     this.message="";
   }
 
@@ -112,19 +125,19 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
     this.cdRef.detectChanges();
   }
 
-  CancelRely(){
+  CancelReply(){
     this.isReplying=false;
     this.replyToMessage=null;
     this.cdRef.detectChanges();
   }
 
-  SendReply(){
+  SaveReply(){
     var replyModel = new MessageReplyModel();
     replyModel.messageId = this.replyToMessage.messageId;
     replyModel.body = this.message;
     replyModel.activeStatusId = ActiveStatusTypeEnum.Active;
-    replyModel.createdDate = new Date().toString();
-    this.sendMsgReplySubs = this.chatServie.ReplyMessage(replyModel).subscribe();
+    replyModel.createdDate = this.GetFormatedDate();
+    this.sendMsgReplySubs = this.chatServie.SaveReply(replyModel).subscribe();
 
     this.isReplying=false;
     this.message="";
@@ -136,20 +149,34 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, After
     var megRef = this.messageList.find(msg => msg.messageId != _msg.messageId);
     megRef.activeStatusId = ActiveStatusTypeEnum.Removed;
     _msg.activeStatusId = ActiveStatusTypeEnum.Removed;
-    this.chatServie.SendMessage(_msg).subscribe();
+    this.chatServie.SaveMessage(_msg).subscribe();
     this.cdRef.detectChanges();
   }
 
-  UpdateMessage(){
-
-  }
-
-  openDialog(_msgModel:MessageModel): void {
-    const dialogRef = this.dialog.open(EditMessageDialog,{data: { messageModel:_msgModel }});
-
+  OpenEditTextDialog(model:any, type:string): void {
+    const dialogRef = this.dialog.open(EditTextDialog,{data: { text:model.body}});
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+      if(result && result.data && result.event=='Updated'){
+        model.body = result.data;
+        model.activeStatusId = ActiveStatusTypeEnum.Edited;
+        model.updatedDate = this.GetFormatedDate();
+        if(type=='Message'){
+          this.chatServie.SaveMessage(model).subscribe();
+        }
+        else if(type=='Reply'){
+          this.chatServie.SaveReply(model).subscribe();
+        }
+      }
     });
   }
 
+  DeleteReplyMessage(){
+
+  }
+
+  GetFormatedDate(){
+    const date = new Date();
+    let options = {hour: "2-digit", minute: "2-digit"};
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString("en-us", options as Intl.DateTimeFormatOptions);
+  }
 }

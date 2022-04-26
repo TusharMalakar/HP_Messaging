@@ -2,7 +2,7 @@
 
 namespace HP_Messaging.Models
 {
-    public enum ActiceStatusTypeEnum
+    public enum ActiveStatusTypeEnum
     {
         Active = 1,
         Edited = 2,

@@ -30,24 +30,24 @@ namespace HP_Messaging.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<MessageModel> SendMsg([FromBody] MessageModel message)
+        public async Task<MessageModel> SaveMessage([FromBody] MessageModel message)
         {
             if (!ModelState.IsValid)
             {
                 return null;
             }
-            return await chatService.SendMessage(message);
+            return await chatService.SaveMessage(message);
         }
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<MessageReplyModel> ReplyMsg([FromBody] MessageReplyModel reply)
+        public async Task<MessageReplyModel> SaveReply([FromBody] MessageReplyModel reply)
         {
             if (!ModelState.IsValid)
             {
                 return null;
             }
-            return await chatService.ReplyMessage(reply);
+            return await chatService.SaveReply(reply);
         }
     }
 }

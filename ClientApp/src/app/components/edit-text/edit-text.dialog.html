@@ -3,8 +3,8 @@
   <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLabel">Edit Message</h5>
   </div>
-  <form [formGroup]="messageForm" (ngSubmit)="updateMessage()">
-    <input type="text" class="modal-body" style="width: 100%;" formControlName="body">
+  <form [formGroup]="textForm" (ngSubmit)="updateMessage()">
+    <input type="text" class="modal-body" style="width: 100%;" formControlName="text">
   </form>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeDialog()">

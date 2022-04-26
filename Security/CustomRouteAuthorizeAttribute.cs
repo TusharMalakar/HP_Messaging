@@ -7,6 +7,7 @@ using System.Security.Principal;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Filters;
 using HP_Messaging.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HP_Messaging.Security
 {
@@ -63,7 +64,7 @@ namespace HP_Messaging.Security
                 {
                     context.Result = new ForbidResult();
                 }
-                var user = _dbContext.Users.FirstOrDefault(user => user.Email == email);
+                var user = _dbContext.Users.AsNoTracking().FirstOrDefault(user => user.Email == email);
                 if (user==null)
                 {
                     context.Result = new ForbidResult();

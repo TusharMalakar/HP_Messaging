@@ -11,7 +11,7 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { AuthGuardService as AuthGuard} from './services/auth-gard.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
-import { EditMessageDialog } from './components/edit-message/edit-message.dialog';
+import { EditTextDialog } from './components/edit-text/edit-text.dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatMenuModule,MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material';
 
@@ -21,7 +21,7 @@ import {MatMenuModule,MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angula
     NavMenuComponent,
     MessageComponent,
     SignInComponent,
-    EditMessageDialog
+    EditTextDialog
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -53,6 +53,6 @@ import {MatMenuModule,MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angula
             ,{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
             ],
   bootstrap: [AppComponent],
-  entryComponents:[EditMessageDialog]
+  entryComponents:[EditTextDialog]
 })
 export class AppModule { }

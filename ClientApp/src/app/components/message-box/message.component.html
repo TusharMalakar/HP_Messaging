@@ -25,12 +25,12 @@
           <span class="text-info" mat-button [matMenuTriggerFor]="menu">...</span>
           <mat-menu #menu="matMenu" yPosition="above">
             <button mat-menu-item (click)="EnableReply(message)">Reply</button>
-            <button mat-menu-item (click)="openDialog(message)">Edit</button>
+            <button mat-menu-item (click)="OpenEditTextDialog(message, 'Message')">Edit</button>
             <button mat-menu-item (click)="DeleteMessage(message)">Delete</button>
           </mat-menu>
           <!-- <span class="text-info" (click)="openDialog(message)">...</span> -->
           <!-- <span (click)="DeleteMessage(message)" class="text-danger" style="position: absolute;right: 0; padding-right:10px;">x</span> -->
-          <span *ngIf="message && message.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Updated On: {{message?.updatedDate}}</span>
+          <small *ngIf="message && message.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Last edited on {{message?.updatedDate}}</small>
         </div>
       </div>
     </div>
@@ -43,6 +43,12 @@
             <div class="shadow-none p-3 mb-5 bg-light rounded">
               <div class="card-body">
                 <p class="card-text">{{reply.body}}</p>
+                <span class="text-info" mat-button [matMenuTriggerFor]="menu">...</span>
+                <mat-menu #menu="matMenu" yPosition="above">
+                  <button mat-menu-item (click)="OpenEditTextDialog(reply, 'Reply')">Edit</button>
+                  <button mat-menu-item (click)="DeleteReplyMessage(reply)">Delete</button>
+                </mat-menu>
+                <small *ngIf="reply && reply.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Last edited on {{reply?.updatedDate}}</small>
               </div>
             </div>
           </div>
@@ -60,14 +66,14 @@
       <p class="text-secondary">
         <i class="fa fa-reply"></i>
         {{replyToMessage.body}}
-        <span class="text-danger" (click)="CancelRely()">  x</span>
+        <span class="text-danger" (click)="CancelReply()">  x</span>
       </p>
     </div>
 
     <div class="container shadow p-3 mb-5 bg-white rounded">
       <div class="d-flex flex-row-reverse">
-        <button [hidden]="isReplying==true" (click)="SendMessage()">Send</button>
-        <button [hidden]="isReplying==false" (click)="SendReply()">Send</button>
+        <button [hidden]="isReplying==true" (click)="SaveMessage()">Send</button>
+        <button [hidden]="isReplying==false" (click)="SaveReply()">Send</button>
         <input style="width: 80%; height: 50px;" id="message" [(ngModel)]="message"/>
       </div>
     </div>

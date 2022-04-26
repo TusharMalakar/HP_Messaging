@@ -25,20 +25,20 @@ export class ChatService {
     return this.http.get<MessageModel[]>(this.baseUrl + 'chat/GetMessages', { headers: headers });
   }
 
-  SendMessage(message: MessageModel){
+  SaveMessage(message: MessageModel){
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem('authHash')}`
     })
-    return this.http.post(this.baseUrl + 'chat/SendMsg', message, { headers: headers });
+    return this.http.post(this.baseUrl + 'chat/SaveMessage', message, { headers: headers });
   }
 
-  ReplyMessage(replyModel: MessageReplyModel){
+  SaveReply(replyModel: MessageReplyModel){
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem('authHash')}`
     })
-    return this.http.post(this.baseUrl + 'chat/ReplyMsg', replyModel, { headers: headers });
+    return this.http.post(this.baseUrl + 'chat/SaveReply', replyModel, { headers: headers });
   }
 
 }

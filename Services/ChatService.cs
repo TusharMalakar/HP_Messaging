@@ -24,40 +24,61 @@ namespace HP_Messaging.Services
             hubContext = _hubContext;
         }
 
-        public async Task<MessageModel> SendMessage(MessageModel message)
+        public async Task<MessageModel> SaveMessage(MessageModel message)
         {
             var messageEntity = mapper.Map<Message>(message);
             messageEntity.User = dbContext.profile;
-
-            if(messageEntity.MessageId == 0)
+            string eventType = string.Empty;
+            //unitOfWork.DetachAll<Message>();
+            if (messageEntity.MessageId == 0)
+            {
                 dbContext.Messages.Add(messageEntity);
+                eventType = "MessageAdded";
+            }
             else
+            {
                 dbContext.Messages.Update(messageEntity);
-
+                eventType = "MessageUpdated";
+                if (messageEntity.ActiveStatusId == (int)ActiveStatusTypeEnum.Edited)
+                    eventType = "MessageUpdated";
+                if (messageEntity.ActiveStatusId == (int)ActiveStatusTypeEnum.Removed)
+                    eventType = "MessageRemoved";
+            }
+                
             await dbContext.SaveChangesAsync();
-            await hubContext.Clients.All.BroadcastMessage("Message", messageEntity);
+            await hubContext.Clients.All.BroadcastMessage(eventType, messageEntity);
             return mapper.Map<MessageModel>(messageEntity);
         }
 
-        public async Task<MessageReplyModel> ReplyMessage(MessageReplyModel reply)
+        public async Task<MessageReplyModel> SaveReply(MessageReplyModel reply)
         {
             var messageReplyEntity = mapper.Map<MessageReply>(reply);
             messageReplyEntity.User = dbContext.profile;
 
+            string eventType = string.Empty;
             if (messageReplyEntity.MessageReplyId == 0)
+            {
                 dbContext.MessageReplies.Add(messageReplyEntity);
+                eventType = "MessageReplyAdded";
+            }
             else
+            {
                 dbContext.MessageReplies.Update(messageReplyEntity);
-
-            dbContext.MessageReplies.Add(messageReplyEntity);
+                if(messageReplyEntity.ActiveStatusId == (int)ActiveStatusTypeEnum.Edited)
+                    eventType = "MessageReplyUpdated";
+                if (messageReplyEntity.ActiveStatusId == (int)ActiveStatusTypeEnum.Removed)
+                    eventType = "MessageReplyRemoved";
+            }
+                
             await dbContext.SaveChangesAsync();
-            await hubContext.Clients.All.BroadcastMessage("MessageReply", messageReplyEntity);
+            await hubContext.Clients.All.BroadcastMessage(eventType, messageReplyEntity);
             return mapper.Map<MessageReplyModel>(messageReplyEntity);
         }
 
         public List<MessageModel> GetMessages()
         {
             var messages = dbContext.Messages.Where(message => message.MessageId > 0)
+                            .AsNoTracking()
                             .Include(msg => msg.User)
                             .Include(msg => msg.MessageReplys);
 

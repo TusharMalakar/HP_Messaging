@@ -6,6 +6,7 @@ using HP_Messaging.Entities;
 using HP_Messaging.Security;
 using HP_Messaging.IServices;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace HP_Messaging.Services
 {
@@ -24,7 +25,7 @@ namespace HP_Messaging.Services
         {
             UserModel authUser =null;
             var hash = !string.IsNullOrEmpty(userModel.Email) ? HashHelper.GetHash(userModel.Email) : string.Empty;
-            var user = dbContext.Users.FirstOrDefault(user => user.Email== userModel.Email);
+            var user = dbContext.Users.AsNoTracking().FirstOrDefault(user => user.Email== userModel.Email);
             if (user != null)
             {
                 authUser = mapper.Map<UserModel>(user);
