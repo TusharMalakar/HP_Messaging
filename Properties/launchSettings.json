@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "https://tmessanger.azurewebsites.net",
+      "applicationUrl": "http://localhost:57803",
       "sslPort": 44364
     }
   },
