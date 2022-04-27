@@ -40,6 +40,13 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     this.chatServie = _chatService;
   }
 
+  public hideRuleContent:boolean[] = [];
+  public buttonName:any = 'Expand';
+
+  toggle(index) {
+    this.hideRuleContent[index] = !this.hideRuleContent[index];
+  }
+
   ngOnChanges() {
     window.scrollTo(0, document.body.scrollHeight);
   }

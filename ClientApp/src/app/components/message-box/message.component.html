@@ -15,12 +15,54 @@
     color: white;
     text-align: center;
  }
+ .hidden {
+   display: none;
+}
 </style>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 <div class="container shadow p-3 mb-4 bg-white rounded">
   <div style=" margin-bottom: 100px;">
-    <div *ngFor="let message of messageList">
+    <div *ngFor="let message of messageList;let i = index">
+      <div *ngIf="message.activeStatusId==3" class="d-flex flex-row-reverse">
+        <div class="card w-30">
+          <small (click)="toggle(i)">
+            {{hideRuleContent[i] ? 'Collapse' : 'This post was deleted. Expand to see replies'}}
+        </small>
+        </div>
+      </div>
+    <div class="expandCollapseContent" *ngIf="hideRuleContent[i]">
+      <div *ngIf="message.activeStatusId==3 && message && message.messageReplys.length == 0" class="d-flex flex-row-reverse">
+        <div class="card w-50">
+          <div class="shadow-none p-0 mb-0 bg-light rounded">
+            <div class="card-body">
+              <small>No replies to show</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="message && message.messageReplys.length > 0">
+        <div *ngFor="let reply of message.messageReplys">
+          <div class="d-flex flex-row-reverse">
+            <div class="card w-50">
+              <div class="shadow-none p-0 mb-0 bg-light rounded">
+                <div class="card-body">
+                  <p class="card-text">{{reply.body}}</p>
+                    <span class="text-info" mat-button [matMenuTriggerFor]="menu">...</span>
+                    <mat-menu #menu="matMenu" yPosition="above">
+                      <button mat-menu-item (click)="OpenEditTextDialog(reply, 'Reply')">Edit</button>
+                      <button mat-menu-item (click)="DeleteReplyMessage(reply)">Delete</button>
+                    </mat-menu>
+                  <small *ngIf="reply && reply.updatedDate" class="text-info" style="position: absolute;right: 0; padding-right:10px;">Last edited on {{reply?.updatedDate}}</small>
+                </div>
+              </div>
+            </div>
+            <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?r=pg" alt="Avatar" class="avatar"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="expandCollapseContent" *ngIf="message.activeStatusId!=3">
       <div class="d-flex flex-row-reverse">
         <!-- <i class="fa fa-reply" (click)="EnableReply(message)"></i> -->
         <div class="card w-75">
@@ -61,11 +103,10 @@
           </div>
         </div>
       </div>
+    </div>
       <br>
     </div>
-
     <br>
-
     <div class="footer">
       <div *ngIf="isReplying==true && replyToMessage != null">
         <p class="text-secondary">
