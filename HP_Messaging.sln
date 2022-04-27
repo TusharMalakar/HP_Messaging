@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HP_Messaging", "HP_Messaging.csproj", "{D32B767A-2329-4559-98B4-00EDCCAE70A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HP_Messaging", "HP_Messaging.csproj", "{D32B767A-2329-4559-98B4-00EDCCAE70A6}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DBSync", "..\DBSync\DBSync.sqlproj", "{4A3D0D63-64E6-4068-BE5B-E99B3FBBD5C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,12 @@ Global
 		{D32B767A-2329-4559-98B4-00EDCCAE70A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D32B767A-2329-4559-98B4-00EDCCAE70A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D32B767A-2329-4559-98B4-00EDCCAE70A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3D0D63-64E6-4068-BE5B-E99B3FBBD5C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3D0D63-64E6-4068-BE5B-E99B3FBBD5C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3D0D63-64E6-4068-BE5B-E99B3FBBD5C1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{4A3D0D63-64E6-4068-BE5B-E99B3FBBD5C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3D0D63-64E6-4068-BE5B-E99B3FBBD5C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3D0D63-64E6-4068-BE5B-E99B3FBBD5C1}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
