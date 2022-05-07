@@ -58,15 +58,16 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   ngOnInit(): void {
-    const connection = new signalR.HubConnectionBuilder()
+    var connection = new signalR.HubConnectionBuilder()
       .configureLogging(signalR.LogLevel.Information)
-      .withUrl(this.baseUrl+'chathub')
+      .withUrl('http://localhost:1010/chathub')
+      //.withUrl(this.baseUrl+'chathub')
       .build();
 
     connection.start().then(function () {
       console.log('SignalR Connected!');
     }).catch(function (err) {
-      return console.error(err.toString());
+      console.error(err.toString());
     });
 
     connection.on("BroadcastMessage", (eventType, object) => {
@@ -113,6 +114,21 @@ export class MessageComponent implements OnInit, OnChanges, AfterViewInit, OnDes
           break;
       }
     });
+
+    // reconnect
+    connection.onclose(() =>{
+      connection =  new signalR.HubConnectionBuilder()
+        .configureLogging(signalR.LogLevel.Information)
+        .withUrl('http://localhost:1010/chathub')
+        //.withUrl(this.baseUrl+'chathub')
+        .build();
+        connection.start().then(function () {
+            console.log('SignalR Re-Connected!');
+          }).catch(function (err) {
+            console.error(err.toString());
+          });
+    });
+
     this.GetMessages();
   }
 
